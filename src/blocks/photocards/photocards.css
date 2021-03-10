@@ -9,13 +9,7 @@
   max-width: 880px;
 }
 
-@media screen and (max-width: 1280px)
-{
-  .photocards
-  {
-    margin: 50px 200px 0 200px;
-  }
-}
+
 @media screen and (max-width: 960px)
 {
   .photocards
