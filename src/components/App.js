@@ -30,7 +30,7 @@ function App() {
     setisEditProfilePopupOpen(false);
     setisAddPlacePopupOpen(false);
     setisImagePopupOpen(false);
-    setSelectedCard({});
+    
   }
   return ( 
     <div className="page__content">
