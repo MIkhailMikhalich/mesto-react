@@ -10,7 +10,7 @@ function Main(props) {
     const [userName, setUserName] = React.useState("");
     const [userDescription, setUserDescription] = React.useState("");
     const [cards, setCards] = React.useState([]);
-    let { onEditAvatar,  onEditProfile,  onAddPlace,  onCard,  onSelectedCard } = props;
+    let { onEditAvatar, onEditProfile, onAddPlace, onCard, onSelectedCard } = props;
     React.useEffect(() => {
         api.getProfile()
             .then((data) => {

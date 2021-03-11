@@ -3,9 +3,8 @@ import trashcan from '../../images/trashcan.svg';
 import React from 'react';
 
 function Card(props) {
-    function handleCardClick()
-    {
-        
+    function handleCardClick() {
+
         props.onCardClick(props.card);
         props.onSelectedCard();
     }
