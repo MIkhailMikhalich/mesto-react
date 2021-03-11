@@ -1,11 +1,13 @@
-import fiilheart from '../../images/fiilheart.svg';
 import heart from '../../images/heart.svg';
 import trashcan from '../../images/trashcan.svg';
+import React from 'react';
+
 function Card(props) {
     function handleCardClick()
     {
         
         props.onCardClick(props.card);
+        props.onSelectedCard();
     }
     return (
         <div key={props.key}>
