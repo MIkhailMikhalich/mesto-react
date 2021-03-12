@@ -1,7 +1,9 @@
 import plus from '../images/plus.svg';
+import React from 'react';
+
 function ImagePopup(props) {
 
- 
+
 
     return (
         <div id="popup-photo"  className={`popup popup_type_photo ${props.isOpen && 'popup_visible'}`}>

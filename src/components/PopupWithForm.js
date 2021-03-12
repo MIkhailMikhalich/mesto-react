@@ -2,9 +2,6 @@ import plus from '../images/plus.svg';
 import React from 'react';
 
 function PopupWithForm(props) {
-
-
-
     return (
         <div id="popup" className={`popup popup_type_${props.name} ${props.isOpen && 'popup_visible'}`}>
 
