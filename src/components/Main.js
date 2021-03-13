@@ -35,7 +35,7 @@ function Main(props) {
           <div className="profile__editavatar-button">
             <img className="profile__edit-img" src={editButtonPen} alt="Изменение аватара" />
           </div>
-          <img className="profile__avatar" src={{ userAvatar }} alt="Аватар пользователя" />
+          <img className="profile__avatar" src={userAvatar} alt="Аватар пользователя" />
         </button>
         <div className="profile__information">
           <div>
