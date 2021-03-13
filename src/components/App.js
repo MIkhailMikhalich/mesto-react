@@ -39,7 +39,7 @@ function App() {
   return (
     <div className="page__content">
       <Header />
-      <Main onCard={handleCardClick} onSelectedCard={handleSelectedCardClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
+      <Main onCardClick={handleCardClick} onSelectedCard={handleSelectedCardClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
 
       <PopupWithForm name="profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopup} >
         <input name="first" id="profile-name" placeholder="Имя" type="text" className=" popup__input popup__first-input popup__name-input" required minLength={2} maxLength={40} noValidate />

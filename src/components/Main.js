@@ -6,15 +6,14 @@ import React from 'react';
 import Card from './Card/Card.js'
 
 function Main(props) {
+  const { onEditAvatar, onEditProfile, onAddPlace, onCard, onSelectedCard } = props;
   const [userAvatar, setUserAvatar] = React.useState("");
   const [userName, setUserName] = React.useState("");
   const [userDescription, setUserDescription] = React.useState("");
   const [cards, setCards] = React.useState([]);
-  let { onEditAvatar, onEditProfile, onAddPlace, onCard, onSelectedCard } = props;
   React.useEffect(() => {
     api.getProfile()
       .then((data) => {
-
         setUserAvatar(data.avatar);
         setUserName(data.name);
         setUserDescription(data.about);
@@ -29,7 +28,6 @@ function Main(props) {
 
   }, []);
 
-
   return (
     <main>
       <section className="profile">
@@ -37,7 +35,7 @@ function Main(props) {
           <div className="profile__editavatar-button">
             <img className="profile__edit-img" src={editButtonPen} alt="Изменение аватара" />
           </div>
-          <img className="profile__avatar" src={`${userAvatar}`} alt="Аватар пользователя" />
+          <img className="profile__avatar" src={{ userAvatar }} alt="Аватар пользователя" />
         </button>
         <div className="profile__information">
           <div>
@@ -54,14 +52,11 @@ function Main(props) {
       </section>
       <section className="photocards">
         {
-
           cards.map(item =>
-
           (<Card onCardClick={onCard} onSelectedCard={onSelectedCard} key={item._id} id={item._id} card={item} link={item.link} likes={item.likes.length} name={item.name} />
           ))
         }
       </section>
-
     </main>
   )
 }
