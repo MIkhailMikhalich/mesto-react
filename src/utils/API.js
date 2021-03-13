@@ -16,6 +16,7 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
       });
   }
+
   getProfile() {
 
     return fetch(`${this._url}users/me`, {
@@ -30,6 +31,7 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
       });
   }
+
   setProfileData(name, info) {
     return fetch(`${this._url}users/me`, {
       method: 'PATCH',
@@ -47,6 +49,7 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
       });
   }
+
   setProfileAvatar(src) {
     return fetch(`${this._url}users/me/avatar`, {
       method: 'PATCH',
@@ -63,6 +66,7 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
       });
   }
+
   postCard(data) {
     return fetch(`${this._url}cards`,
       {
@@ -82,6 +86,7 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
       });
   }
+
   deleteCard(cardID) {
     return fetch(`${this._url}cards/${cardID}`,
       {
@@ -96,6 +101,7 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
       });
   }
+
   putLike(cardID) {
     return fetch(`${this._url}cards/likes/${cardID}`,
       {
@@ -111,6 +117,7 @@ class Api {
       });
 
   }
+
   unPutLike(cardID) {
     return fetch(`${this._url}cards/likes/${cardID}`,
       {
