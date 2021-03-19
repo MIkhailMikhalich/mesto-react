@@ -102,6 +102,7 @@ class Api {
       });
   }
 
+
   putLike(cardID) {
     return fetch(`${this._url}cards/likes/${cardID}`,
       {
@@ -132,7 +133,22 @@ class Api {
         return Promise.reject(`Ошибка: ${res.status}`);
       });
   }
+  changeLikeCardStatus(card,isLiked)
+  {
+    return fetch(`${this._url}cards/likes/${card}`,
+      {
+        method: isLiked ? 'PUT' : 'DELETE',
+        headers: this._headers,
+      })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
 
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
+
+  }
 }
 
 const api = new Api({

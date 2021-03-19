@@ -5,13 +5,24 @@ import { useState } from 'react';
 import React from 'react';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
+import currentUserContext from '../contexts/CurrentUserContext.js';
+import api from '../utils/api.js';
+
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
-
+  const [currentUser, setCurrentUser] = useState({});
   const [selectedCard, setSelectedCard] = useState({});
+
+  React.useEffect(()=>{
+    api.getProfile()
+    .then((data)=>{setCurrentUser(data)})
+    .catch((err) => console.log(err));
+  })
+
+
   function handleEditAvatarClick() {
 
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -39,6 +50,7 @@ function App() {
   return (
     <div className="page__content">
       <Header />
+      <currentUserContext.Provider value={currentUser}>
       <Main onCardClick={handleCardClick} onSelectedCard={handleSelectedCardClick} onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} />
 
       <PopupWithForm name="profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopup} >
@@ -75,7 +87,9 @@ function App() {
 
 
       <Footer />
+      </currentUserContext.Provider>
     </div>
+
   );
 }
 
