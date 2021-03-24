@@ -1,44 +1,15 @@
 import plus from '../images/plus.svg';
 import editButtonPen from '../images/edit_button_pen.svg';
 import editButton from '../images/edit_button.svg';
-import api from '../utils/api.js';
 import React from 'react';
 import Card from './Card/Card.js'
 import currentUserContext from '../contexts/CurrentUserContext.js';
 function Main(props) {
   const { onEditAvatar, onEditProfile, onAddPlace, onCardClick, onSelectedCard } = props;
-  const [cards, setCards] = React.useState([]);
   const currentUser = React.useContext(currentUserContext);
 
-  React.useEffect(() => {
 
-    api.getInitialCards()
-      .then((data) => {
-        setCards(data);
-      }
-      )
-      .catch((err) => console.log(err));
 
-  }, []);
-
-  function handleCardLike(card) {
-
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id) ? newCard : c));
-    })
-      .catch((err) => console.log(err));
-  }
-  function handleCardDelete(card) {
-    const deletedId = card._id;
-    const isOwn = card.owner._id === currentUser._id;
-    if(isOwn){
-    api.deleteCard(card._id)
-    .then((data)=>{setCards(cards.filter(card => card._id !== deletedId))})
-      .catch((err) => console.log(err));
-    }
-  }
   return (
     <main>
       <section className="profile">
@@ -63,8 +34,8 @@ function Main(props) {
       </section>
       <section className="photocards">
         {
-          cards.map(item =>
-          (<Card onCardLike={handleCardLike} onCardDelete={handleCardDelete} onCardClick={onCardClick} onSelectedCard={onSelectedCard} key={item._id} id={item._id} card={item} link={item.link} likes={item.likes.length} name={item.name} />
+          props.cards.map(item =>
+          (<Card onCardLike={props.onCardLike} onCardDelete={props.onCardDelete} onCardClick={onCardClick} onSelectedCard={onSelectedCard} key={item._id} id={item._id} card={item} link={item.link} likes={item.likes.length} name={item.name} />
           ))
         }
       </section>
