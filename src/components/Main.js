@@ -2,13 +2,11 @@ import plus from '../images/plus.svg';
 import editButtonPen from '../images/edit_button_pen.svg';
 import editButton from '../images/edit_button.svg';
 import React from 'react';
-import Card from './Card/Card.js'
+import Card from './Card.js';
 import currentUserContext from '../contexts/CurrentUserContext.js';
 function Main(props) {
   const { onEditAvatar, onEditProfile, onAddPlace, onCardClick, onSelectedCard } = props;
   const currentUser = React.useContext(currentUserContext);
-
-
 
   return (
     <main>
@@ -33,13 +31,22 @@ function Main(props) {
         </button>
       </section>
       <section className="photocards">
-        {
-          props.cards.map(item =>
-          (<Card onCardLike={props.onCardLike} onCardDelete={props.onCardDelete} onCardClick={onCardClick} onSelectedCard={onSelectedCard} key={item._id} id={item._id} card={item} link={item.link} likes={item.likes.length} name={item.name} />
-          ))
-        }
+        {props.cards.map((item) => (
+          <Card
+            onCardLike={props.onCardLike}
+            onCardDelete={props.onCardDelete}
+            onCardClick={onCardClick}
+            onSelectedCard={onSelectedCard}
+            key={item._id}
+            id={item._id}
+            card={item}
+            link={item.link}
+            likes={item.likes.length}
+            name={item.name}
+          />
+        ))}
       </section>
     </main>
-  )
+  );
 }
 export default Main;
