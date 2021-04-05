@@ -1,10 +1,20 @@
 import logo from '../images/logo.svg';
 import React from 'react';
 
-function Header() {
+function Header(props) {
+  function handleExit() {
+    props.onExit();
+  }
+  React.useEffect(() => {
+    props.tokenCheck();},[2])
+
   return (
     <header className="header">
       <img className="header__logo" src={logo} alt="Логотип" />
+      <p className="header__email">{props.email}</p>
+      <button className=" button header__exit-button"onClick={handleExit}>
+        Выход
+      </button>
     </header>
   );
 }

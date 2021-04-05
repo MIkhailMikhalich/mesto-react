@@ -5,6 +5,7 @@ import React from 'react';
 import Card from './Card.js';
 import currentUserContext from '../contexts/CurrentUserContext.js';
 function Main(props) {
+
   const { onEditAvatar, onEditProfile, onAddPlace, onCardClick, onSelectedCard } = props;
   const currentUser = React.useContext(currentUserContext);
 

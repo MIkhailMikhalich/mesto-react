@@ -2,25 +2,40 @@ import Header from './Header.js';
 import Main from './Main.js';
 import Footer from './Footer.js';
 import { useState } from 'react';
+import { Route, Switch, Redirect,useHistory } from 'react-router-dom';
 import React from 'react';
 import PopupWithForm from './PopupWithForm.js';
 import EditProfilePopup from './EditProfilePopup.js';
 import EditAvatarPopup from './EditAvatarPopup.js';
 import AddPlacePopup from './AddPlacePopup.js';
 import ImagePopup from './ImagePopup.js';
+import InfoTooltip from './InfoToolTip.js';
 import currentUserContext from '../contexts/CurrentUserContext.js';
+import ProtectedRoute from './ProtectedRoute';
 import api from '../utils/api.js';
+import * as auth from '../utils/Auth&Reg';
+import Login from './Login.js';
+import Register from './Register.js';
 
 function App() {
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [isPassed, setIsPassed] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = React.useState([]);
+  const [isLoggedIn, setisLoggedIn] = React.useState(false);
+  const [userData, setUserData] = useState({
+    id: '',
+    email: '',
+  });
+  let history = useHistory();
 
   React.useEffect(() => {
+    tokenCheck();
     api
       .getProfile()
       .then((data) => {
@@ -60,6 +75,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsInfoTooltipOpen(false);
   }
   function handleUpdateUser(data) {
     api
@@ -114,47 +130,146 @@ function App() {
     }
   }
 
+  function handleRegistration(password, email) {
+    return auth
+      .register({ password, email })
+      .then((res) => {
+        setIsPassed(true);
+        setIsInfoTooltipOpen(true);
+        history.push('/signin');
+
+        return res;
+      })
+      .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        console.log(err);
+      });
+  }
+
+  function handleLogin(password, email) {
+    return auth
+      .authorize({ password, email })
+      .then((data) => {
+        setisLoggedIn(true);
+        history.push('/main');
+
+        localStorage.setItem('jwt', data.token);
+        return;
+      })
+      .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        console.log(err);
+      });
+  }
+
+  function tokenCheck() {
+
+    if (localStorage.getItem('jwt')) {
+      let jwt = localStorage.getItem('jwt');
+      auth
+        .getContent(jwt)
+        .then((data) => {
+          setisLoggedIn(true);
+          history.push('/main');
+
+          setUserData({ id: data.data._id, email: data.data.email });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  function handleExit() {
+    setisLoggedIn(false);
+    localStorage.removeItem('jwt');
+    history.push('/signup');
+
+  }
+  function handleLoginButton() {
+    history.push('/signin');
+  }
+  function handleRegsterButton() {
+    history.push('/signup');
+  }
+
   return (
-    <div className="page__content">
-      <Header />
+    <Switch>
       <currentUserContext.Provider value={currentUser}>
-        <Main
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-          onCardClick={handleCardClick}
-          onSelectedCard={handleSelectedCardClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-        />
+        <div className="page__content">
+          <ProtectedRoute
+            path="/main"
+            loggedIn={isLoggedIn}
+            onExit={handleExit}
+            email={userData.email}
+            tokenCheck={tokenCheck}
+            component={Header}
+          />
 
-        <EditProfilePopup
-          onUpdateUser={handleUpdateUser}
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopup}
-        />
-        <AddPlacePopup
-          onPlaceSubmit={handleAddPlaceSubmit}
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopup}
-        />
-        <EditAvatarPopup
-          onUpdateAvatar={handleUpdateAvatar}
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopup}
-        />
-        <PopupWithForm name="erase" title="Вы уверены ?" isOpen={false} onClose={closeAllPopup}>
-          <button id="agree" className="button popup__save-button popup__agree-button">
-            Да
-          </button>
-        </PopupWithForm>
+          <ProtectedRoute
+            path="/main"
+            loggedIn={isLoggedIn}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            onCardClick={handleCardClick}
+            onSelectedCard={handleSelectedCardClick}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            component={Main}
+          />
 
-        <ImagePopup onClose={closeAllPopup} isOpen={isImagePopupOpen} card={selectedCard} />
+          <ProtectedRoute
+            path="/main"
+            loggedIn={isLoggedIn}
+            onUpdateUser={handleUpdateUser}
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopup}
+            component={EditProfilePopup}
+          />
 
-        <Footer />
+          <ProtectedRoute
+            path="/main"
+            loggedIn={isLoggedIn}
+            onPlaceSubmit={handleAddPlaceSubmit}
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopup}
+            component={AddPlacePopup}
+          />
+          <ProtectedRoute
+            path="/main"
+            loggedIn={isLoggedIn}
+            onUpdateAvatar={handleUpdateAvatar}
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopup}
+            component={EditAvatarPopup}
+          />
+
+
+          <PopupWithForm name="erase" title="Вы уверены ?" isOpen={false} onClose={closeAllPopup}>
+            <button id="agree" className="button popup__save-button popup__agree-button">
+              Да
+            </button>
+          </PopupWithForm>
+
+          <ImagePopup onClose={closeAllPopup} isOpen={isImagePopupOpen} card={selectedCard} />
+          <InfoTooltip onClose={closeAllPopup} isOpen={isInfoTooltipOpen} isPassed={isPassed} />
+          <ProtectedRoute path="/main" loggedIn={isLoggedIn} component={Footer} />
+        </div>
+      <Route path="/signup">
+            <Register onLogin={handleLoginButton} onRegister={handleRegistration} />
+          </Route>
+          <Route path="/signin">
+            <Login onRegister={handleRegsterButton} onLogin={handleLogin} />
+          </Route>
+
+      <Route exact path="/">
+            {isLoggedIn ? <Redirect to="/main" /> : <Redirect to="/signup" />}
+          </Route>
       </currentUserContext.Provider>
-    </div>
+
+    </Switch>
   );
 }
 
