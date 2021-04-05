@@ -3,7 +3,9 @@ import React from 'react';
 
 function Header(props) {
   function handleExit() {
+
     props.onExit();
+
   }
   React.useEffect(() => {
     props.tokenCheck();},[2])
